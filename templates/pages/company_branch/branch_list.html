@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Branch List{% endblock %}
+
+{% block content %}
+<div class="w-full bg-white hover:bg-blue-700 mt-4 rounded-lg">
+    <div class="flex px-4 py-6">
+        <h1 class="text-2xl font-bold">Branch List</h1>
+    </div>
+</div>
+
+<div class="w-full bg-white mt-4 inline-block px-4 py-2 mt-4 bg-blue-600 hover:bg-neutral-200 rounded-lg">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+        <table id="branchTable" class="w-full text-sm text-left text-gray-700">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3">Branch Name</th>
+                    <th class="px-6 py-3">Code</th>
+                    <th class="px-6 py-3">City</th>
+                    <th class="px-6 py-3">State</th>
+                    <th class="px-6 py-3">Country</th>
+                    <th class="px-6 py-3">Company</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for branch in branches %}
+                <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4">{{ branch.name }}</td>
+                    <td class="px-6 py-4">{{ branch.code }}</td>
+                    <td class="px-6 py-4">{{ branch.city }}</td>
+                    <td class="px-6 py-4">{{ branch.state }}</td>
+                    <td class="px-6 py-4">{{ branch.country }}</td>
+                    <td class="px-6 py-4">{{ branch.company.name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-gray-500 py-4">No branches found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

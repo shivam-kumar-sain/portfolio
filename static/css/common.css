@@ -1,0 +1,49 @@
+@media (min-width: 768px) {
+    #sidebar.collapsed {
+        width: 4rem;
+    }
+
+    #sidebar.expanded {
+        width: 16rem;
+    }
+}
+
+/* Width & visibility styles for mobile */
+@media (max-width: 767px) {
+    #sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        height: 100%;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+
+    #sidebar.expanded {
+        transform: translateX(0);
+        width: 100%;
+    }
+
+    /* Close button position */
+    #closeBtn {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255 255 255 / 0.2);
+        border-radius: 9999px;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        color: white;
+        transition: background-color 0.2s;
+        z-index: 60;
+    }
+
+    #closeBtn:hover {
+        background: rgba(255 255 255 / 0.4);
+    }
+}

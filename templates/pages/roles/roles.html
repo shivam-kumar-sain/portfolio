@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{#
+Template: Roles Creation Page
+Description:
+- Displays a form to create a new user group (role) with a name and selectable permissions.
+- Permissions can be filtered live via a search box using Alpine.js for instant client-side filtering.
+- Tailwind CSS is used for styling inputs, buttons, and layout for a modern and responsive UI.
+- CSRF protection enabled with {% csrf_token %}.
+- Validation errors for each field are shown inline in red text.
+- Alpine.js is loaded via CDN at the bottom to enable reactive search filtering.
+Usage:
+- Rendered with a Django form that includes 'name' and 'permissions' fields.
+- 'permissions' is a ModelMultipleChoiceField with checkboxes.
+- The permissions list is displayed in a scrollable container with 2-column layout.
+#}
+
+{% block title %}Roles{% endblock %}
+
+{% block content %}
+<div class="w-full bg-white hover:bg-blue-700 mt-4 rounded-lg">
+    <div class="flex px-4 py-6">
+        <h1 class="text-2xl font-bold text-gray-800">Create Roles</h1>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-xl shadow">
+
+    <form method="post" class="space-y-6" x-data="{ search: '' }" novalidate>
+        {% csrf_token %}
+
+        <div>
+            <label for="{{ form.name.id_for_label }}" class="block mb-2 font-medium text-gray-700">Group Name</label>
+            <input type="text" name="{{ form.name.html_name }}" id="{{ form.name.id_for_label }}"
+                value="{{ form.name.value|default_if_none:'' }}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required>
+            {% if form.name.errors %}
+            <p class="text-red-600 text-sm mt-1">{{ form.name.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <div>
+            <label for="{{ form.branch.id_for_label }}" class="block mb-2 font-medium text-gray-700">Select
+                Branch</label>
+            <select name="{{ form.branch.html_name }}" id="{{ form.branch.id_for_label }}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required>
+                {% for val, label in form.branch.field.choices %}
+                {% if form.branch.value|stringformat:"s" == val|stringformat:"s" %}
+                <option value="{{ val }}" selected>{{ label }}</option>
+                {% else %}
+                <option value="{{ val }}">{{ label }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            {% if form.branch.errors %}
+            <p class="text-red-600 text-sm mt-1">{{ form.branch.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <div>
+            <label for="permission-search" class="block mb-2 font-medium text-gray-700">Search Permissions</label>
+            <input type="text" id="permission-search" x-model="search" placeholder="Type to filter permissions..."
+                class="w-full px-4 py-2 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+
+        <div>
+            <label class="block mb-2 font-medium text-gray-700">Permissions</label>
+            <div
+                class="max-h-64 overflow-y-auto border border-gray-300 rounded-md p-4 bg-gray-50 grid grid-cols-2 gap-3">
+                {% for permission in form.permissions %}
+                <label class="inline-flex items-center space-x-2"
+                    x-show="search === '' || '{{ permission.choice_label|lower }}'.includes(search.toLowerCase())">
+                    {{ permission.tag }}
+                    <span class="text-gray-700 text-sm">{{ permission.choice_label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% if form.permissions.errors %}
+            <p class="text-red-600 text-sm mt-1">{{ form.permissions.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <button type="submit"
+                class="w-full py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition duration-200">
+                Create Group
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://unpkg.com/alpinejs" defer></script>
+{% endblock %}

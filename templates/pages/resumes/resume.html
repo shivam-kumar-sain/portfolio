@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Roles{% endblock %}
+
+{% block content %}
+<div class="w-full bg-white mt-4 rounded-lg">
+    <div class="flex justify-between items-center px-4 py-6" x-data>
+        <!-- Left: Heading -->
+        <h1 class="text-2xl font-bold text-gray-800">Resumes</h1>
+
+        <!-- Right: Upload Resume -->
+        <form method="post" enctype="multipart/form-data" hx-post="{% url 'resume' %}" hx-target="#resumeTableBody"
+            hx-swap="innerHTML">
+            {% csrf_token %}
+            <input type="file" name="resume_file" class="block w-full text-sm text-gray-500
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-full file:border-0
+               file:text-sm file:font-semibold
+               file:bg-blue-50 file:text-blue-700
+               hover:file:bg-blue-100" onchange="this.form.submit()">
+        </form>
+    </div>
+</div>
+
+<div class="w-full bg-white mt-4 inline-block px-4 py-2 mt-4 rounded-lg">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+        <table id="resumeTable" class="w-full text-sm text-left text-gray-700">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3">Candidate Name</th>
+                    <th class="px-6 py-3">Email</th>
+                    <th class="px-6 py-3">Phone</th>
+                    <th class="px-6 py-3">Profile</th>
+                    <th class="px-6 py-3">Uploaded By</th>
+                    <th class="px-6 py-3">Branch</th>
+                    <th class="px-6 py-3">Resume</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resume in resumes %}
+                <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-6 py-4">{{ resume.candidate_name }}</td>
+                    <td class="px-6 py-4">{{ resume.email }}</td>
+                    <td class="px-6 py-4">{{ resume.phone }}</td>
+                    <td class="px-6 py-4">{{ resume.profile }}</td>
+                    <td class="px-6 py-4">{{ resume.user.username }}</td>
+                    <td class="px-6 py-4">{{ resume.branch.name }}</td>
+                    <td class="px-6 py-4">
+                        {% if resume.resume_file %}
+                        <a href="{{ resume.resume_file.url }}" target="_blank"
+                            class="text-blue-600 hover:underline">View</a>
+                        {% else %}
+                        No file
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

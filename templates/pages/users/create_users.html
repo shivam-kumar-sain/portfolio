@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{#
+Template: Roles Creation Page
+Description:
+- Displays a form to create a new user group (role) with a name and selectable permissions.
+- Permissions can be filtered live via a search box using Alpine.js for instant client-side filtering.
+- Tailwind CSS is used for styling inputs, buttons, and layout for a modern and responsive UI.
+- CSRF protection enabled with {% csrf_token %}.
+- Validation errors for each field are shown inline in red text.
+- Alpine.js is loaded via CDN at the bottom to enable reactive search filtering.
+Usage:
+- Rendered with a Django form that includes 'name' and 'permissions' fields.
+- 'permissions' is a ModelMultipleChoiceField with checkboxes.
+- The permissions list is displayed in a scrollable container with 2-column layout.
+#}
+
+{% block title %}Roles{% endblock %}
+
+{% block content %}
+<div class="w-full bg-white hover:bg-blue-700 mt-4 rounded-lg">
+    <div class="flex px-4 py-6">
+        <h1 class="text-2xl font-bold text-gray-800">Creat Users</h1>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-xl shadow">
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}" class="block mb-1 text-sm font-medium text-gray-700">
+                {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+            <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit"
+            class="w-full py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition duration-200">
+            Register
+        </button>
+    </form>
+
+</div>
+
+<script src="https://unpkg.com/alpinejs" defer></script>
+{% endblock %}

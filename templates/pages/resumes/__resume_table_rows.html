@@ -1,0 +1,21 @@
+<tbody>
+    {% for resume in resumes %}
+    <tr class="bg-white border-b hover:bg-gray-50">
+        <td class="px-6 py-4">{{ resume.candidate_name }}</td>
+        <td class="px-6 py-4">{{ resume.email }}</td>
+        <td class="px-6 py-4">{{ resume.phone }}</td>
+        <td class="px-6 py-4">{{ resume.profile }}</td>
+        <td class="px-6 py-4">{{ resume.user.username }}</td>
+        <td class="px-6 py-4">{{ resume.branch.name }}</td>
+        <td class="px-6 py-4">
+            {% if resume.resume_file %}
+            <a href="{{ resume.resume_file.url }}" target="_blank" class="text-blue-600 hover:underline">View</a>
+            {% else %}
+            No file
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+
+    {% endfor %}
+</tbody>
