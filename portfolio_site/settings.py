@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-nvqok=okwp9cd_bu%ga^#eaax4(7-e1%@dufd@m4b#uv*ihuh3
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = "home.UserTable"
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "django_browser_reload",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [

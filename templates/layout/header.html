@@ -1,54 +1,84 @@
+<!-- HTMX CDN -->
 <header class="sticky top-0 z-50 bg-gray-800 text-gray-100 shadow-md">
-  <div class="container mx-auto flex justify-between items-center py-4 px-6">
-    <!-- Logo -->
-    <div class="text-2xl font-bold tracking-wide">Shivam</div>
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <!-- Logo -->
+        <div class="text-2xl font-bold tracking-wide">Shivam</div>
 
-    <!-- Hamburger (Mobile) -->
-    <div class="md:hidden">
-      <button id="menu-btn" class="focus:outline-none">
-        <svg class="w-6 h-6 text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
+        <!-- Hamburger (Mobile) -->
+        <div class="md:hidden">
+            <button id="menu-btn" class="focus:outline-none z-50 relative">
+                <svg class="w-6 h-6 text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Navigation (Desktop) -->
+        <nav class="hidden md:flex space-x-6 font-medium items-center">
+            <a href="/" class="hover:text-gray-300 transition-colors duration-300">Home</a>
+            <a href="/projects/" class="hover:text-gray-300 transition-colors duration-300">Projects</a>
+            <a href="/blog/" class="hover:text-gray-300 transition-colors duration-300">Blog</a>
+            <a href="/resume/" class="hover:text-gray-300 transition-colors duration-300">Resume</a>
+            <a href="/contact/" class="hover:text-gray-300 transition-colors duration-300 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">Contact</a>
+
+            {% if user.is_authenticated %}
+            <button 
+                hx-post="{% url 'logout' %}" 
+                hx-trigger="click" 
+                hx-swap="none" 
+                class="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-500 transition cursor-pointer z-50 relative"
+                style="pointer-events: auto;">
+                Logout
+            </button>
+            {% else %}
+            <a href="{% url 'login' %}" class="px-4 py-2 bg-green-600 rounded-lg hover:bg-green-500 transition cursor-pointer z-50 relative">Login</a>
+            {% endif %}
+        </nav>
     </div>
 
-    <!-- Navigation (Desktop) -->
-    <nav class="hidden md:flex space-x-6 font-medium">
-      <a href="/" class="hover:text-gray-300 transition-colors duration-300">Home</a>
-      <a href="/projects/" class="hover:text-gray-300 transition-colors duration-300">Projects</a>
-      <a href="/blog/" class="hover:text-gray-300 transition-colors duration-300">Blog</a>
-      <a href="/resume/" class="hover:text-gray-300 transition-colors duration-300">Resume</a>
-      <a href="/contact/" class="hover:text-gray-300 transition-colors duration-300 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
-        Contact
-      </a>
-    </nav>
-  </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-gray-800 text-gray-100 z-50 relative">
+        <a href="/" class="block px-6 py-2 hover:bg-gray-700 transition">Home</a>
+        <a href="/projects/" class="block px-6 py-2 hover:bg-gray-700 transition">Projects</a>
+        <a href="/blog/" class="block px-6 py-2 hover:bg-gray-700 transition">Blog</a>
+        <a href="/resume/" class="block px-6 py-2 hover:bg-gray-700 transition">Resume</a>
+        <a href="/contact/" class="block px-6 py-2 hover:bg-gray-700 transition">Contact</a>
 
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-gray-800 text-gray-100">
-    <a href="/" class="block px-6 py-2 hover:bg-gray-700 transition">Home</a>
-    <a href="/projects/" class="block px-6 py-2 hover:bg-gray-700 transition">Projects</a>
-    <a href="/blog/" class="block px-6 py-2 hover:bg-gray-700 transition">Blog</a>
-    <a href="/resume/" class="block px-6 py-2 hover:bg-gray-700 transition">Resume</a>
-    <a href="/contact/" class="block px-6 py-2 hover:bg-gray-700 transition">Contact</a>
-  </div>
+        {% if user.is_authenticated %}
+        <button 
+            hx-post="{% url 'logout' %}" 
+            hx-trigger="click" 
+            hx-swap="none" 
+            class="block px-6 py-2 bg-red-600 rounded-lg hover:bg-red-500 transition mt-2 w-full text-left cursor-pointer z-50 relative"
+            style="pointer-events: auto;">
+            Logout
+        </button>
+        {% else %}
+        <a href="{% url 'login' %}" class="block px-6 py-2 bg-green-600 rounded-lg hover:bg-green-500 transition mt-2 w-full text-left cursor-pointer z-50 relative">Login</a>
+        {% endif %}
+    </div>
 </header>
 
 <script>
-  const btn = document.getElementById('menu-btn');
-  const menu = document.getElementById('mobile-menu');
+    // CSRF token for HTMX POST
+    document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
 
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
-  });
+    // Mobile menu toggle
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+    });
 
-  const header = document.querySelector('header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      header.classList.add('shadow-2xl');
-    } else {
-      header.classList.remove('shadow-2xl');
-    }
-  });
+    // Header shadow on scroll
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('shadow-2xl');
+        } else {
+            header.classList.remove('shadow-2xl');
+        }
+    });
 </script>
