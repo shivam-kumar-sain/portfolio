@@ -1,0 +1,101 @@
+---
+
+# Django + Tailwind CSS Setup Guide (Ubuntu)
+
+### Step 1: Create Virtual Environment
+
+```bash
+python3 -m venv env
+source env/bin/activate
+```
+
+### Step 2: Install Django
+
+```bash
+pip3 install django
+```
+
+### Step 3: Install Django-Tailwind
+
+```bash
+pip3 install django-tailwind
+```
+
+### Step 4: Install Django Browser Reload
+
+```bash
+pip3 install django-browser-reload
+```
+
+### Step 5: Create Django Project
+
+```bash
+django-admin startproject <project_name> .
+```
+
+### Step 6: Create Django App (as per your need)
+
+```bash
+python3 manage.py startapp <app_name>
+```
+
+### Step 7: Update `settings.py`
+
+In `INSTALLED_APPS`, add:
+
+```python
+INSTALLED_APPS = [
+    "tailwind",
+    "theme",  # Tailwind app (create this app first, then import it here)
+    "django_browser_reload",
+    "<your_app_name>",
+    ...
+]
+```
+
+Other configurations:
+
+```python
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = ["127.0.0.1"]
+```
+
+👉 Note: After adding `"theme"` in `INSTALLED_APPS`, you must run
+
+```bash
+python3 manage.py tailwind init
+```
+
+to initialize the Tailwind app.
+
+### Step 8: Initialize Tailwind
+
+```bash
+python3 manage.py tailwind init
+```
+
+### Step 9: Install Tailwind Packages
+
+```bash
+python3 manage.py tailwind install
+```
+
+### Step 10: Run the Project
+
+Open **two terminals**:
+
+**Terminal 1:**
+
+```bash
+python3 manage.py runserver
+```
+
+**Terminal 2:**
+
+```bash
+python3 manage.py tailwind start
+```
+
+---
+This completes the **Django + Tailwind setup on Ubuntu server**.
+

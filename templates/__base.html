@@ -1,0 +1,24 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Shivam Portfolio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+    {% tailwind_css %}
+  </head>
+
+  <body class="bg-gray-900 text-gray-100 font-sans">
+    <!-- Header -->
+    {% include 'layout/header.html' %}
+
+    <!-- Main Content -->
+    <main>{% block content %}{% endblock %}</main>
+
+    <!-- Footer -->
+    {% include 'layout/footer.html' %}
+
+  </body>
+</html>
