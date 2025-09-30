@@ -82,39 +82,55 @@
     <h2 class="text-3xl font-bold text-gray-100">My Projects</h2>
     <p class="text-gray-300 mt-2">A few highlights of my work</p>
   </div>
-  <div class="container mx-auto grid md:grid-cols-3 gap-8">
+  <div class="container mx-auto grid md:grid-cols-3 gap-8 relative">
+    {% for project in projects %}
     <div
       class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-700 transition duration-300 transform hover:scale-105"
     >
       <img
-        src="https://images.unsplash.com/photo-1590608897129-79d0c6cfdc79?auto=format&fit=crop&w=800&q=80"
+        src="{{ project.project_img.url }}"
+        alt="{{ project.project_name }}"
         class="rounded-lg mb-4 w-full h-48 object-cover"
       />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Project 1</h3>
-      <p class="text-gray-300">Description of project 1</p>
+
+      <h3 class="text-xl font-semibold mb-2 text-gray-100">
+        {{ project.project_name }}
+      </h3>
+      <p class="text-gray-300">{{ project.description }}</p>
+
+      <!-- Status Badge -->
+      {% if project.status == 'live' %}
+      <span class="inline-block px-3 py-1 mt-2 text-white bg-green-500 rounded-full text-sm font-semibold">
+        Live
+      </span>
+      {% elif project.status == 'working' %}
+      <span class="inline-block px-3 py-1 mt-2 text-white bg-yellow-500 rounded-full text-sm font-semibold">
+        Working
+      </span>
+      {% elif project.status == 'holding' %}
+      <span class="inline-block px-3 py-1 mt-2 text-white bg-red-500 rounded-full text-sm font-semibold">
+        Holding
+      </span>
+      {% endif %}
+
+      <p class="text-sm text-gray-400 mt-2">
+        Added on {{ project.created_at|date:"M d, Y" }}
+      </p>
+
     </div>
-    <div
-      class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-700 transition duration-300 transform hover:scale-105"
-    >
-      <img
-        src="https://images.unsplash.com/photo-1581091012184-7bdb05e3e9b3?auto=format&fit=crop&w=800&q=80"
-        class="rounded-lg mb-4 w-full h-48 object-cover"
-      />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Project 2</h3>
-      <p class="text-gray-300">Description of project 2</p>
-    </div>
-    <div
-      class="p-6 bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-700 transition duration-300 transform hover:scale-105"
-    >
-      <img
-        src="https://images.unsplash.com/photo-1581092915367-2024a4ed8454?auto=format&fit=crop&w=800&q=80"
-        class="rounded-lg mb-4 w-full h-48 object-cover"
-      />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Project 3</h3>
-      <p class="text-gray-300">Description of project 3</p>
+    {% empty %}
+    <p class="text-gray-500">No projects found.</p>
+    {% endfor %}
+
+    <!-- More Link at bottom-right -->
+    <div class="absolute bottom-0 right-0 mr-2 mb-2">
+      <a href="{% url 'projects' %}" class="text-indigo-500 font-semibold hover:underline">
+        More →
+      </a>
     </div>
   </div>
 </section>
+
 
 <!-- Blog Section -->
 <section class="py-20 bg-gray-800 z-10 relative">
@@ -166,105 +182,94 @@
   </div>
 
   <div class="container mx-auto max-w-3xl">
-    <form action="#" method="POST" class="rounded-lg shadow-lg p-8 space-y-6">
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- Name -->
-        <div class="flex flex-col text-left">
-          <label class="text-gray-300 mb-2">Name</label>
-          <input
-            type="text"
-            name="name"
-            required
-            class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <!-- Email -->
-        <div class="flex flex-col text-left">
-          <label class="text-gray-300 mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            required
-            class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
+<form 
+    action="{% url 'client-mail' %}" 
+    method="POST" 
+    class="rounded-lg shadow-lg p-8 space-y-6"
+    hx-post="{% url 'client-mail' %}" 
+    hx-target="#formResponse" 
+    hx-swap="innerHTML"
+>
+  {% csrf_token %}
 
-      <!-- Subject -->
-      <div class="flex flex-col text-left">
-        <label class="text-gray-300 mb-2">Subject</label>
-        <input
-          type="text"
-          name="subject"
-          class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="flex flex-col text-left">
+      <label class="text-gray-300 mb-2">Name</label>
+      <input type="text" name="name" required class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+    </div>
 
-      <!-- Message -->
-      <div class="flex flex-col text-left">
-        <label class="text-gray-300 mb-2">Message</label>
-        <textarea
-          name="message"
-          rows="5"
-          required
-          class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="flex justify-center">
-        <button type="submit"
-          class="px-6 py-3 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 hover:text-gray-50 transition duration-300 z-10 relative mt-2">
-          Send Message
-        </button>
-      </div>
-    </form>
+    <div class="flex flex-col text-left">
+      <label class="text-gray-300 mb-2">Email</label>
+      <input type="email" name="email" required class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+    </div>
   </div>
-</section>
 
-<!-- tsParticles Script -->
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    tsParticles.load("tsparticles", {
-      fpsLimit: 120,
-      background: { color: "transparent" },
-      particles: {
-        number: { value: 60, density: { enable: true, area: 500 } },
-        color: { value: "#ffffff" },
-        shape: { type: "triangle" },
-        opacity: { value: 0.5, random: true },
-        size: { value: 4, random: true },
-        move: {
-          enable: true,
-          speed: 2,
-          direction: "none",
-          random: true,
-          straight: false,
-          outModes: { default: "bounce" },
+  <div class="flex flex-col text-left">
+    <label class="text-gray-300 mb-2">Subject</label>
+    <input type="text" name="subject" class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+  </div>
+
+  <div class="flex flex-col text-left">
+    <label class="text-gray-300 mb-2">Message</label>
+    <textarea name="message" rows="5" required class="px-4 py-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+  </div>
+
+  <div class="flex justify-center">
+    <button type="submit" class="px-6 py-3 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 hover:text-gray-50 transition duration-300 z-10 relative mt-2">
+      Send Message
+    </button>
+  </div>
+</form>
+
+<!-- Response container -->
+<div id="formResponse" class="mt-4 text-center text-green-500 font-semibold"></div>
+
+  </div>
+
+  <!-- tsParticles Script -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      tsParticles.load("tsparticles", {
+        fpsLimit: 120,
+        background: { color: "transparent" },
+        particles: {
+          number: { value: 60, density: { enable: true, area: 500 } },
+          color: { value: "#ffffff" },
+          shape: { type: "triangle" },
+          opacity: { value: 0.5, random: true },
+          size: { value: 4, random: true },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: "none",
+            random: true,
+            straight: false,
+            outModes: { default: "bounce" },
+          },
+          links: {
+            enable: true,
+            distance: 150,
+            color: "#ffffff",
+            opacity: 0.2,
+            width: 1,
+          },
         },
-        links: {
-          enable: true,
-          distance: 150,
-          color: "#ffffff",
-          opacity: 0.2,
-          width: 1,
+        interactivity: {
+          detectsOn: "canvas",
+          events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" },
+            resize: true,
+          },
+          modes: {
+            repulse: { distance: 100 },
+            push: { quantity: 4 },
+          },
         },
-      },
-      interactivity: {
-        detectsOn: "canvas",
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          onClick: { enable: true, mode: "push" },
-          resize: true,
-        },
-        modes: {
-          repulse: { distance: 100 },
-          push: { quantity: 4 },
-        },
-      },
-      detectRetina: true,
+        detectRetina: true,
+      });
     });
-  });
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
+</section>

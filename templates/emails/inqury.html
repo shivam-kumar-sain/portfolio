@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Contact Message</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      color: #4f46e5;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: #9ca3af;
+      margin-top: 30px;
+    }
+    .label {
+      font-weight: bold;
+      color: #111827;
+    }
+    .content-box {
+      background-color: #f3f4f6;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>New Contact Message</h2>
+    <p>You have received a new message from your website contact form:</p>
+
+    <div class="content-box">
+      <p><span class="label">Name:</span> {{ name }}</p>
+      <p><span class="label">Email:</span> {{ email }}</p>
+      <p><span class="label">Subject:</span> {{ subject }}</p>
+      <p><span class="label">Message:</span><br>{{ message }}</p>
+    </div>
+
+    <p>Respond to the client as soon as possible!</p>
+
+    <div class="footer">
+      &copy; {{ year }} YourWebsite. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
