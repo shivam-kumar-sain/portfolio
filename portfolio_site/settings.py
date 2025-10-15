@@ -130,18 +130,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = ["127.0.0.1"]
-# URL to access static files in templates
+
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Local directory jahan static files rakhi hain
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'static',
+    BASE_DIR / 'theme/static',
 ]
-
-# (Optional) Production ke liye collectstatic ke liye
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'             
 EMAIL_PORT = 587
