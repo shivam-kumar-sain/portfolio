@@ -5,10 +5,13 @@
     <title>Shivam Portfolio</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.3"></script>
+
+    <!-- Compiled Tailwind CSS -->
     <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
-    {% tailwind_css %}
   </head>
 
   <body class="bg-gray-900 text-gray-100 font-sans">
@@ -16,10 +19,11 @@
     {% include 'layout/header.html' %}
 
     <!-- Main Content -->
-    <main>{% block content %}{% endblock %}</main>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
 
     <!-- Footer -->
     {% include 'layout/footer.html' %}
-
   </body>
 </html>
