@@ -8,6 +8,7 @@ urlpatterns = [
     path('projects/', views.projects, name='projects'),
     path('projects/update/<int:pk>/', views.update_project, name='update_project'),
     path('blog/', views.blog, name='blog'),
+    path("blogs/<int:id>/update/", views.update_blog, name="update_blog"),
     path('resume/', views.resume, name='resume'),
     path('contact/', views.contact, name='contact'),
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html', redirect_authenticated_user=True, next_page='/'), name='login'),

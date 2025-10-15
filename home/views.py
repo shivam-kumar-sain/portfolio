@@ -1,15 +1,16 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from .models import Project
+from .models import Project,Blog
 import os
-from .forms import ProjectForm
+from .forms import ProjectForm,BlogForm
 from django.conf import settings
 from django.core.mail import send_mail
 
 
 def index(request):
     projects = Project.objects.all().order_by("-created_at")[:3]
-    return render(request, 'home/index.html',{'projects':projects})
+    blogs= Blog.objects.all().order_by("-created_at")[:3]
+    return render(request, 'home/index.html',{'projects':projects,'blogs':blogs})
 
 
 def projects(request):
@@ -58,9 +59,46 @@ def update_project(request, pk):
 
     return render(request, "home/partials/update_form.html", {"form": form, "project": project})
 
-
 def blog(request):
-    return render(request, 'home/blog.html')
+    if request.method == "POST":
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            blog.save()
+            if blog.image:
+                ext = blog.image.name.split('.')[-1] 
+                new_name = f"blog/{blog.id}.{ext}"
+                new_path = os.path.join(settings.MEDIA_ROOT, new_name)
+
+                old_path = blog.image.path
+                os.rename(old_path, new_path)
+                blog.image.name = new_name
+                blog.save()
+            return redirect("blog")
+    else:
+        form = BlogForm()
+
+    blogs = Blog.objects.all().order_by("-created_at")[:6]
+    return render(request, "home/blog.html", {"blogs": blogs, "form": form})
+
+def update_blog(request, id):
+    blog = get_object_or_404(Blog, pk=id)
+    if request.method == "POST":
+        form = BlogForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            blog = form.save(commit=False)
+            if 'image' in request.FILES and blog.image:
+                if os.path.exists(blog.image.path):
+                    os.remove(blog.image.path)
+            blog.save()
+            if request.headers.get("HX-Request"):
+                return HttpResponse(
+                    "<script>document.getElementById('modalEdit').close(); window.location.reload();</script>"
+                )
+    else:
+        form = BlogForm(instance=blog)
+
+    return render(request, "home/partials/blog_detail_partial.html", {"form": form, "blog": blog})
 
 def resume(request):
     return render(request, 'home/resume.html')

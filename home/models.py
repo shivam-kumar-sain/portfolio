@@ -62,12 +62,15 @@ class UserDetails(models.Model):
     def __str__(self):
         return f"{self.user.fullname} - {self.designation}"
 
-
+def blog_image_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f"{instance.id}.{ext}"
+    return os.path.join('blog/', filename)
 # 3. Bloge
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    image = models.ImageField(upload_to="blog_images/", blank=True, null=True) 
+    image = models.ImageField(upload_to=blog_image_path, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

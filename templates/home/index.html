@@ -138,37 +138,43 @@
     <h2 class="text-3xl font-bold text-gray-100">Blog & Articles</h2>
     <p class="text-gray-300 mt-2">Latest insights and articles</p>
   </div>
+
   <div class="container mx-auto grid md:grid-cols-3 gap-8">
+    {% for blog in blogs %}
     <div
       class="p-6 bg-gray-700 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-600 transition duration-300 transform hover:scale-105"
     >
+      {% if blog.image %}
       <img
-        src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80"
+        src="{{ blog.image.url }}"
+        alt="{{ blog.title }}"
         class="rounded-lg mb-4 w-full h-40 object-cover"
       />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Blog 1</h3>
-      <p class="text-gray-300 text-sm">Short description of blog 1...</p>
-    </div>
-    <div
-      class="p-6 bg-gray-700 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-600 transition duration-300 transform hover:scale-105"
-    >
+      {% else %}
       <img
-        src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+        src="https://via.placeholder.com/800x400.png?text=No+Image"
+        alt="No Image"
         class="rounded-lg mb-4 w-full h-40 object-cover"
       />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Blog 2</h3>
-      <p class="text-gray-300 text-sm">Short description of blog 2...</p>
+      {% endif %}
+
+      <h3 class="text-xl font-semibold mb-2 text-gray-100">
+        {{ blog.title }}
+      </h3>
+      <p class="text-gray-300 text-sm line-clamp-1">
+        {{ blog.content }}
+      </p>
     </div>
-    <div
-      class="p-6 bg-gray-700 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-600 transition duration-300 transform hover:scale-105"
-    >
-      <img
-        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80"
-        class="rounded-lg mb-4 w-full h-40 object-cover"
-      />
-      <h3 class="text-xl font-semibold mb-2 text-gray-100">Blog 3</h3>
-      <p class="text-gray-300 text-sm">Short description of blog 3...</p>
+        <div class="absolute bottom-0 right-0 mr-2 mb-2">
+      <a href="{% url 'blog' %}" class="text-indigo-500 font-semibold hover:underline">
+        More →
+      </a>
     </div>
+    {% empty %}
+    <p class="text-gray-300">No blogs available.</p>
+    {% endfor %}
+        <!-- More Link at bottom-right -->
+
   </div>
 </section>
 

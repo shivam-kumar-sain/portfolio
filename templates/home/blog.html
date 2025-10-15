@@ -1,0 +1,163 @@
+{% extends "__base.html" %} {% block content %} {% load static %}
+
+<div
+  class="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg rounded-xl mx-[10%] my-4"
+>
+  <div class="flex justify-between items-center px-6 py-4">
+    <!-- Left -->
+    <a
+      class="text-2xl font-extrabold hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-300"
+    >
+      Blogs
+    </a>
+    {% if user.is_authenticated %}
+    <button
+      class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold shadow-md hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
+      onclick="modalPremium.showModal()"
+    >
+      Create Blog
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Blogs Section -->
+<section class="py-20 bg-gray-900 z-10 relative">
+  <div class="container mx-auto space-y-12">
+    {% for blog in blogs %}
+    <div
+      class="p-8 bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transition duration-300"
+    >
+      <!-- Title + Edit Button -->
+      <div class="flex justify-between items-start mb-4">
+        <h2 class="text-3xl font-bold text-gray-100">{{ blog.title }}</h2>
+        {% if user.is_authenticated %}
+        <button
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition"
+          hx-get="{% url 'update_blog' blog.id %}"
+          hx-target="#editFormContainer"
+          hx-trigger="click"
+          hx-swap="innerHTML"
+        >
+          Edit
+        </button>
+        {% endif %}
+      </div>
+
+      <!-- Blog Image -->
+      <img
+        src="{{ blog.image.url }}"
+        alt="{{ blog.title }}"
+        class="rounded-lg mb-6 w-full h-96 object-cover"
+      />
+
+      <!-- Blog Content -->
+      <p class="text-gray-300 leading-relaxed whitespace-pre-line">
+        {{ blog.content }}
+      </p>
+
+      <!-- Date -->
+      <p class="text-sm text-gray-400 mt-4">
+        Posted on {{ blog.created_at|date:"M d, Y" }}
+      </p>
+    </div>
+    {% empty %}
+    <p class="text-gray-500 text-center">No blogs found.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Premium Modal -->
+<dialog id="modalPremium" class="modal modal-bottom sm:modal-middle p-0">
+  <div
+    class="modal-box relative bg-white rounded-2xl shadow-2xl p-8 md:p-10 max-w-2xl"
+  >
+    <!-- Close Button -->
+    <button
+      onclick="modalPremium.close()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+    >
+      ✕
+    </button>
+
+    <!-- Modal Header -->
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Add Project</h3>
+    <p class="text-gray-500 mb-6">
+      Fill out the details below to add a new project.
+    </p>
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <div class="flex flex-col">
+        <label
+          for="{{ form.title.id_for_label }}"
+          class="text-black font-medium mb-2"
+        >
+          {{ form.title.label }}
+        </label>
+        {{ form.title }} {{ form.title.errors }}
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="{{ form.content.id_for_label }}"
+          class="text-black font-medium mb-2"
+        >
+          {{ form.content.label }}
+        </label>
+        {{ form.content }} {{ form.content.errors }}
+      </div>
+
+      <div class="flex flex-col">
+        <label
+          for="{{ form.image.id_for_label }}"
+          class="text-black font-medium mb-2"
+        >
+          {{ form.image.label }}
+        </label>
+        {{ form.image }} {{ form.image.errors }}
+      </div>
+
+      <div class="text-right">
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+        >
+          Save Blog
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="modalEdit" class="modal modal-bottom sm:modal-middle p-0">
+  <div
+    class="modal-box relative bg-white rounded-2xl shadow-2xl p-8 md:p-10 max-w-2xl"
+  >
+    <button
+      onclick="document.getElementById('modalEdit').close()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+    >
+      ✕
+    </button>
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Edit Blog</h3>
+    <p class="text-gray-500 mb-6">Update your blog details.</p>
+    <div id="editFormContainer"></div>
+  </div>
+</dialog>
+
+<script>
+  const modalPremium = document.getElementById("modalPremium");
+</script>
+<script>
+  const modalEdit = document.getElementById("modalEdit");
+  document.body.addEventListener("htmx:afterSwap", (event) => {
+    if (event.target.id === "editFormContainer") {
+      modalEdit.showModal();
+    }
+  });
+</script>
+
+{% endblock %}
