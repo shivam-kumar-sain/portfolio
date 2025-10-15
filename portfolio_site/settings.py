@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-nvqok=okwp9cd_bu%ga^#eaax4(7-e1%@dufd@m4b#uv*ihuh3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["portfolio-22uk.onrender.com"]
 AUTH_USER_MODEL = "home.UserTable"
 
 
